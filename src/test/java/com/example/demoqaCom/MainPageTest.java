@@ -4,8 +4,6 @@ import com.codeborne.selenide.Configuration;
 import com.codeborne.selenide.SelenideElement;
 import com.codeborne.selenide.logevents.SelenideLogger;
 import io.qameta.allure.selenide.AllureSelenide;
-import okhttp3.Address;
-import org.apache.commons.lang3.ArrayUtils;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -13,7 +11,6 @@ import org.openqa.selenium.By;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
-import java.util.Arrays;
 
 import static com.codeborne.selenide.Condition.matchText;
 import static com.codeborne.selenide.Condition.text;
@@ -49,17 +46,14 @@ public class MainPageTest {
 
     @Test
     public void studentRegFormSubmitTest() {
-        fillForm();
-
-        System.out.println("Verify Data");
-        // todo: write form verification here
         String resultLocator;
 
+        fillForm();
+
         SelenideElement resultsTable = $(".modal-content table");
-        System.out.println(resultsTable);
+
         resultLocator = ".//td[contains(text(), 'Student Name')]/following-sibling::td";
         resultsTable.find(By.xpath(resultLocator)).shouldHave(text(FIRSTNAME + " " + LASTNAME));
-
 
         resultLocator = ".//td[contains(text(), 'Student Email')]/following-sibling::td";
         resultsTable.find(By.xpath(resultLocator)).shouldHave(text(EMAIL));
@@ -101,10 +95,6 @@ public class MainPageTest {
         $("#userNumber").sendKeys(PHONE);
 
         // Date of Birth
-//        LocalDate date = LocalDate.parse(DATE_OF_BIRTH, DateTimeFormatter.ofPattern("dd MMM yyyy"));
-//        String formattedDate = date.format(DateTimeFormatter.ofPattern("dd MMM yyyy"));
-//        $("#dateOfBirthInput").clear();
-//        $("#dateOfBirthInput").sendKeys(formattedDate);   // Q: Why does sendKeys repopulate the field? Does it click on an element,before send in the text?
         $("#dateOfBirthInput").click();
         $(".react-datepicker__month-select")
                 .selectOptionContainingText(DATE_OF_BIRTH.format(DateTimeFormatter.ofPattern("MMMM")));
@@ -117,22 +107,22 @@ public class MainPageTest {
         $("#subjectsContainer").click();
         for (String subject : SUBJECTS) {
             $("#subjectsContainer input").sendKeys(subject);
-            $("#subjectsContainer input").pressEnter();
+            $("#subjectsContainer input").pressTab();
         }
 
         // Hobbies
 //        $("#hobbies-checkbox-2").click();   // Reading    // Q: checkboxes are blocked by label tag here as well.
-        for (String hobbie : HOBBIES) {
-            $$x("//input[contains(@id,'hobbies')]/following-sibling::label").find(text(hobbie)).click();
+        for (String hobby : HOBBIES) {
+            $$x("//input[contains(@id,'hobbies')]/following-sibling::label").find(text(hobby)).click();
         }
 
         $("#currentAddress").sendKeys(ADDRESS);
 
         $("#state input").sendKeys(STATE);
-        $("#state input").pressEnter();
+        $("#state input").pressTab();
 
         $("#city input").sendKeys(CITY);
-        $("#city input").pressEnter();
+        $("#city input").pressTab();
         $("#submit").click();
     }
 }
