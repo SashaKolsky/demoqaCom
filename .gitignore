@@ -1,0 +1,7 @@
+build
+.gradle
+.idea
+.allure
+gradle*
+browsers.json
+settings.gradle
