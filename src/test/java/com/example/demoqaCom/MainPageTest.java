@@ -10,11 +10,10 @@ import org.junit.jupiter.api.Test;
 import org.openqa.selenium.By;
 
 import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 
-import static com.codeborne.selenide.Condition.matchText;
-import static com.codeborne.selenide.Condition.text;
+import static com.codeborne.selenide.Condition.*;
 import static com.codeborne.selenide.Selenide.*;
+import static java.time.format.DateTimeFormatter.ofPattern;
 
 public class MainPageTest {
     private static final String FIRSTNAME = "Alexander";
@@ -22,13 +21,12 @@ public class MainPageTest {
     private static final String EMAIL = "al@kaz.com";
     private static final String GENDER = "Male";
     private static final String PHONE = "4157994433";
-    private static final LocalDate DATE_OF_BIRTH = LocalDate.parse("13 Aug 1984",
-                                                                   DateTimeFormatter.ofPattern("dd MMM yyyy"));
+    private static final LocalDate DATE_OF_BIRTH = LocalDate.parse("29 Aug 1990", ofPattern("d MMM yyyy"));
     private static final String[] SUBJECTS = {"Computer Science", "Physics", "Math"};
     private static final String[] HOBBIES = {"Reading", "Music"};
     private static final String ADDRESS = "Lucknow University Main Building\n" +
-                                    "University Rd\n" +
-                                    "Babuganj, Hasanganj";
+            "University Rd\n" +
+            "Babuganj, Hasanganj";
     private static final String STATE = "Uttar Pradesh";
     private static final String CITY = "Lucknow";
 
@@ -65,8 +63,7 @@ public class MainPageTest {
         resultsTable.find(By.xpath(resultLocator)).shouldHave(text(PHONE));
 
         resultLocator = ".//td[contains(text(), 'Date of Birth')]/following-sibling::td";
-        resultsTable.find(By.xpath(resultLocator)).shouldHave(text(
-                DATE_OF_BIRTH.format(DateTimeFormatter.ofPattern("dd MMMM,yyyy"))));
+        resultsTable.find(By.xpath(resultLocator)).shouldHave(text(DATE_OF_BIRTH.format(ofPattern("dd MMMM,yyyy"))));
 
         resultLocator = ".//td[contains(text(), 'Subjects')]/following-sibling::td";
         resultsTable.find(By.xpath(resultLocator)).shouldHave(text(String.join(", ", SUBJECTS)));
@@ -85,44 +82,42 @@ public class MainPageTest {
     }
 
     private static void fillForm() {
-        $("#firstName").sendKeys(FIRSTNAME);
-        $("#lastName").sendKeys(LASTNAME);
-        $("#userEmail").sendKeys(EMAIL);
+        $("#firstName").val(FIRSTNAME);
+        $("#lastName").val(LASTNAME);
+        $("#userEmail").val(EMAIL);
 
         $$("label[for*=gender-radio]").find(matchText(GENDER)).click();
-        //$(By.name("gender")).selectRadio("Other");    // Q: why doesn't this work and throws ElementClickInterceptedException instead? (saying it is overlayed by label element)
 
-        $("#userNumber").sendKeys(PHONE);
+        $("#userNumber").val(PHONE);
 
         // Date of Birth
         $("#dateOfBirthInput").click();
         $(".react-datepicker__month-select")
-                .selectOptionContainingText(DATE_OF_BIRTH.format(DateTimeFormatter.ofPattern("MMMM")));
+                .selectOptionContainingText(DATE_OF_BIRTH.format(ofPattern("MMMM")));
         $(".react-datepicker__year-select")
-                .selectOptionContainingText(DATE_OF_BIRTH.format(DateTimeFormatter.ofPattern("yyyy")));
+                .selectOptionContainingText(DATE_OF_BIRTH.format(ofPattern("yyyy")));
+        String monthDay = DATE_OF_BIRTH.format(ofPattern(".*MMMM d.*"));
         $$(".react-datepicker__day")
-                .find(text(DATE_OF_BIRTH.format(DateTimeFormatter.ofPattern("dd")))).click();
+                .filter(attributeMatching("aria-label", monthDay))
+                .first().click();
 
         // Subject
         $("#subjectsContainer").click();
         for (String subject : SUBJECTS) {
-            $("#subjectsContainer input").sendKeys(subject);
-            $("#subjectsContainer input").pressTab();
+            $("#subjectsContainer input").val(subject).pressTab();
         }
 
         // Hobbies
-//        $("#hobbies-checkbox-2").click();   // Reading    // Q: checkboxes are blocked by label tag here as well.
         for (String hobby : HOBBIES) {
             $$x("//input[contains(@id,'hobbies')]/following-sibling::label").find(text(hobby)).click();
         }
 
-        $("#currentAddress").sendKeys(ADDRESS);
+        $("#currentAddress").val(ADDRESS);
 
-        $("#state input").sendKeys(STATE);
-        $("#state input").pressTab();
+        $("#state input").val(STATE).pressTab();
 
-        $("#city input").sendKeys(CITY);
-        $("#city input").pressTab();
+        $("#city input").val(CITY).pressTab();
+
         $("#submit").click();
     }
 }
