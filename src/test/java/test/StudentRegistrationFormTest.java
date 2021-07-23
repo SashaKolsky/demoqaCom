@@ -4,6 +4,7 @@ import com.codeborne.selenide.Configuration;
 import com.codeborne.selenide.SelenideElement;
 import com.codeborne.selenide.logevents.SelenideLogger;
 import io.qameta.allure.selenide.AllureSelenide;
+import models.StudentRegistrationForm;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -11,8 +12,9 @@ import org.openqa.selenium.By;
 
 import java.time.LocalDate;
 
-import static com.codeborne.selenide.Condition.*;
-import static com.codeborne.selenide.Selenide.*;
+import static com.codeborne.selenide.Condition.text;
+import static com.codeborne.selenide.Selenide.$;
+import static com.codeborne.selenide.Selenide.open;
 import static java.time.format.DateTimeFormatter.ofPattern;
 
 public class StudentRegistrationFormTest {
@@ -82,42 +84,19 @@ public class StudentRegistrationFormTest {
     }
 
     private static void fillForm() {
-        $("#firstName").val(FIRSTNAME);
-        $("#lastName").val(LASTNAME);
-        $("#userEmail").val(EMAIL);
 
-        $$("label[for*=gender-radio]").find(matchText(GENDER)).click();
-
-        $("#userNumber").val(PHONE);
-
-        // Date of Birth
-        $("#dateOfBirthInput").click();
-        $(".react-datepicker__month-select")
-                .selectOptionContainingText(DATE_OF_BIRTH.format(ofPattern("MMMM")));
-        $(".react-datepicker__year-select")
-                .selectOptionContainingText(DATE_OF_BIRTH.format(ofPattern("yyyy")));
-        String monthDay = DATE_OF_BIRTH.format(ofPattern(".*MMMM d.*"));
-        $$(".react-datepicker__day")
-                .filter(attributeMatching("aria-label", monthDay))
-                .first().click();
-
-        // Subject
-        $("#subjectsContainer").click();
-        for (String subject : SUBJECTS) {
-            $("#subjectsContainer input").val(subject).pressTab();
-        }
-
-        // Hobbies
-        for (String hobby : HOBBIES) {
-            $$x("//input[contains(@id,'hobbies')]/following-sibling::label").find(text(hobby)).click();
-        }
-
-        $("#currentAddress").val(ADDRESS);
-
-        $("#state input").val(STATE).pressTab();
-
-        $("#city input").val(CITY).pressTab();
-
-        $("#submit").click();
+        new StudentRegistrationForm()
+                .fillFirstName(FIRSTNAME)
+                .fillLastName(LASTNAME)
+                .fillEmail(EMAIL)
+                .selectGender(GENDER)
+                .fillPhone(PHONE)
+                .fillDateOfBirth(DATE_OF_BIRTH)
+                .fillSubjects(SUBJECTS)
+                .fillHobbies(HOBBIES)
+                .fillCurrentAddress(ADDRESS)
+                .fillState(STATE)
+                .fillCity(CITY)
+                .submitForm();
     }
 }
