@@ -1,4 +1,4 @@
-package com.example.demoqaCom;
+package test;
 
 import com.codeborne.selenide.Configuration;
 import com.codeborne.selenide.SelenideElement;
@@ -15,7 +15,7 @@ import static com.codeborne.selenide.Condition.*;
 import static com.codeborne.selenide.Selenide.*;
 import static java.time.format.DateTimeFormatter.ofPattern;
 
-public class MainPageTest {
+public class StudentRegistrationFormTest {
     private static final String FIRSTNAME = "Alexander";
     private static final String LASTNAME = "Kaz";
     private static final String EMAIL = "al@kaz.com";
