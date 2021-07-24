@@ -5,6 +5,7 @@ import com.codeborne.selenide.SelenideElement;
 import components.Calendar;
 
 import java.time.LocalDate;
+import java.util.List;
 
 import static com.codeborne.selenide.Condition.matchText;
 import static com.codeborne.selenide.Condition.text;
@@ -55,7 +56,7 @@ public class StudentRegistrationForm {
         return this;
     }
 
-    public StudentRegistrationForm fillSubjects(String[] values) {
+    public StudentRegistrationForm fillSubjects(List<String> values) {
         subjectsContainer.click();
         for (String subject : values) {
             subjects.val(subject).pressTab();
@@ -63,7 +64,7 @@ public class StudentRegistrationForm {
         return this;
     }
 
-    public StudentRegistrationForm fillHobbies(String[] values) {
+    public StudentRegistrationForm fillHobbies(List<String> values) {
         for (String hobby : values) {
             hobbyOptions.find(text(hobby)).click();
         }
@@ -87,7 +88,7 @@ public class StudentRegistrationForm {
     }
 
     public void submitForm() {
-        submitButton.click();
+        submitButton.scrollTo().click();
     }
 
 }

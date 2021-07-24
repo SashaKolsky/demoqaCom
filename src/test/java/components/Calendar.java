@@ -15,6 +15,6 @@ public class Calendar {
         String monthDay = date.format(ofPattern(".*MMMM d.*"));
         $$(".react-datepicker__day")
                 .filter(attributeMatching("aria-label", monthDay))
-                .first().click();
+                .first().scrollTo().click();
     }
 }
