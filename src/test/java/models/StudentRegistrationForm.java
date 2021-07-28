@@ -1,26 +1,24 @@
 package models;
 
-import com.codeborne.selenide.ElementsCollection;
 import com.codeborne.selenide.SelenideElement;
 import components.Calendar;
 
 import java.time.LocalDate;
 import java.util.List;
 
-import static com.codeborne.selenide.Condition.matchText;
-import static com.codeborne.selenide.Condition.text;
-import static com.codeborne.selenide.Selenide.*;
+import static com.codeborne.selenide.Selectors.withText;
+import static com.codeborne.selenide.Selenide.$;
 
 public class StudentRegistrationForm {
 
     private SelenideElement firstName = $("#firstName");
     private SelenideElement lastName = $("#lastName");
     private SelenideElement email = $("#userEmail");
-    private ElementsCollection genderOptions = $$("label[for*=gender-radio]");
+    private SelenideElement genderWrapper = $("#genterWrapper");
     private SelenideElement phone = $("#userNumber");
     private SelenideElement subjectsContainer = $("#subjectsContainer");
     private SelenideElement subjects = subjectsContainer.$("input");
-    private ElementsCollection hobbyOptions = $$x("//input[contains(@id,'hobbies')]/following-sibling::label");
+    private SelenideElement hobbyWrapper = $("#hobbiesWrapper");
     private SelenideElement currentAddress = $("#currentAddress");
     private SelenideElement state = $("#state input");
     private SelenideElement city = $("#city input");
@@ -42,7 +40,7 @@ public class StudentRegistrationForm {
     }
 
     public StudentRegistrationForm selectGender(String option) {
-        genderOptions.find(matchText(option)).click();
+        genderWrapper.find(withText(option)).click();
         return this;
     }
 
@@ -66,7 +64,7 @@ public class StudentRegistrationForm {
 
     public StudentRegistrationForm fillHobbies(List<String> values) {
         for (String hobby : values) {
-            hobbyOptions.find(text(hobby)).click();
+            hobbyWrapper.find(withText(hobby)).click();
         }
         return this;
     }
